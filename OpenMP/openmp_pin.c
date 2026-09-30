@@ -10,9 +10,9 @@
 #include <omp.h>
 #include <stdio.h>
 
-/* ===== PIN OBJETIVO (modifica este valor para probar) ===== */
-#define PIN_OBJETIVO 5831
-/* ========================================================== */
+/* ===== PIN OBJETIVO (8 dígitos) ===== */
+#define PIN_OBJETIVO 87654321
+/* ================================================= */
 
 int main(void) {
     int pin_hallado = -1;   /* compartido entre hilos */
@@ -28,7 +28,7 @@ int main(void) {
     {
         int hilo  = omp_get_thread_num();
         int total_hilos = omp_get_num_threads();
-        int total = 10000;
+        int total = 100000000; /* 10^8 combinaciones posibles */
 
         /* Distribución del rango entre hilos */
         int bloque = total / total_hilos;
@@ -41,7 +41,7 @@ int main(void) {
         /* Solo un hilo a la vez imprime para no mezclar líneas */
         #pragma omp critical
         {
-            printf("Hilo %d buscando desde %04d hasta %04d\n", hilo, inicio, fin);
+            printf("Hilo %d buscando desde %08d hasta %08d\n", hilo, inicio, fin);
         }
 
         /* Barrera: esperar a que todos impriman antes de buscar */
@@ -75,7 +75,7 @@ int main(void) {
 
     printf("\n");
     if (pin_hallado != -1) {
-        printf("PIN encontrado : %04d\n", pin_hallado);
+        printf("PIN encontrado : %08d\n", pin_hallado);
         printf("Encontrado por : Hilo %d\n", ganador);
     } else {
         printf("PIN no encontrado en el rango.\n");
