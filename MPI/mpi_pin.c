@@ -77,13 +77,13 @@ int main(int argc, char *argv[]) {
     if (rank == 0) {
         printf("\n");
         if (encontrado_global) {
-            printf("PIN encontrado : %0*lld\n", PIN_DIGITOS, pin_global);
-            printf("Encontrado por : Proceso %d\n", ganador_global);
+            printf("PIN encontrado: %0*lld\n", PIN_DIGITOS, pin_global);
+            printf("Encontrado por: Proceso %d\n", ganador_global);
         } else {
             printf("PIN no encontrado en el rango.\n");
         }
-        printf("Tiempo total     : %.6f segundos\n", tiempo_total);
-        printf("Procesos usados  : %d\n", size);
+        printf("Tiempo total: %.6f segundos\n", tiempo_total);
+        printf("Procesos usados: %d\n", size);
     }
 
     MPI_Finalize();
