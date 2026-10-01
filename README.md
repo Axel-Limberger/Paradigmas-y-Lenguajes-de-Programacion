@@ -1,46 +1,58 @@
 # Búsqueda de PIN por Fuerza Bruta — MPI vs OpenMP
 
-Actividad práctica para la asignatura **Paradigmas y Lenguajes de Programación**.  
-Demuestra cómo distribuir una misma tarea de búsqueda usando dos modelos de paralelismo diferentes:
+Trabajo Práctico para la asignatura **Paradigmas y Lenguajes de Programación** (2026).  
+Comparación práctica entre los paradigmas de **memoria distribuida** (MPI) y **memoria compartida** (OpenMP).
 
-| Archivo | Modelo | Unidad de trabajo |
-|---|---|---|
-| `mpi_pin.c` | MPI | Procesos independientes |
-| `openmp_pin.c` | OpenMP | Hilos dentro de un proceso |
+---
+
+## Integrantes
+- Ernst Milagros Shaiel
+- Kluka Jorge Favio
+- Limberger Axel Agustín
+- Verón Juan Manuel
+
+---
+
+## Archivos del proyecto
+
+| Archivo | Modelo | Unidad de trabajo | Mecanismo de parada |
+|---|---|---|---|
+| `mpi_pin.c` | MPI | Procesos independientes | Reducción colectiva por tandas (`MPI_Allreduce`) |
+| `openmp_pin.c` | OpenMP | Hilos (threads) dentro de un proceso | Variable compartida con exclusión mutua (`#pragma omp critical`) |
 
 ---
 
 ## Descripción del problema
 
-Se simula la búsqueda de un PIN numérico de 4 dígitos (0000–9999) mediante **fuerza bruta**.  
-El rango completo se divide equitativamente entre los procesos o hilos disponibles.  
-Cada uno trabaja únicamente sobre su porción del rango hasta encontrar el PIN objetivo.
+Se simula la búsqueda de un PIN numérico de **8 dígitos** (`00000000`–`99999999`, 100 millones de combinaciones) mediante **fuerza bruta** (paralelismo de datos por descomposición de dominio).
+
+El rango total se reparte de forma equitativa entre las unidades de procesamiento disponibles:
+- **Enfoque MPI (Memoria Distribuida):** Cada proceso trabaja en su espacio de direcciones aislado. Para evitar sobrecargar la red con mensajes en cada iteración individual, la búsqueda se organiza en bloques de **100.000 combinaciones**. Al término de cada bloque, los procesos se sincronizan mediante `MPI_Allreduce` con `MPI_MAX` para verificar si alguno ya halló el PIN y detener la búsqueda tempranamente.
+- **Enfoque OpenMP (Memoria Compartida):** Múltiples hebras conviven dentro del mismo proceso y leen directamente la variable compartida `pin_hallado`. Al encontrar el valor, entran a una sección crítica (`#pragma omp critical`) para registrar el hallazgo de manera atómica, permitiendo que las demás hebras interrumpan su ciclo inmediatamente.
+
+> **Nota sobre seguridad (Hashing):** En un entorno de producción real, las contraseñas nunca se almacenan en texto plano, sino mediante funciones hash criptográficas unidireccionales (SHA-256, bcrypt, etc.). En este caso práctico comparamos enteros directamente en memoria con fines pedagógicos; no obstante, el reparto de dominio y la coordinación paralela se rigen bajo el mismo principio.
 
 ---
 
 ## Requisitos
 
 ### Para la versión MPI (`mpi_pin.c`)
-- Una implementación de MPI instalada:
-  - **Linux/macOS:** OpenMPI (`sudo apt install openmpi-bin libopenmpi-dev`) o MPICH.
-  - **Windows:** Microsoft MPI (MS-MPI) o MPICH desde WSL.
-- Compilador C compatible con MPI (`mpicc`).
+- Implementación de MPI instalada:
+  - **Linux / macOS:** OpenMPI (`sudo apt install openmpi-bin libopenmpi-dev`) o MPICH.
+  - **Windows:** Microsoft MPI (MS-MPI) o MPICH vía WSL.
+- Compilador de MPI: `mpicc`.
 
 ### Para la versión OpenMP (`openmp_pin.c`)
-- GCC 4.2 o superior (incluido por defecto en la mayoría de sistemas Linux/macOS).
-- En **Windows** se puede usar MinGW-w64 o compilar desde WSL.
+- GCC 4.2 o superior (con soporte para OpenMP vía flag `-fopenmp`).
 
 ---
 
 ## Modificar el PIN objetivo
 
-En ambos archivos, busca la línea:
+En ambos archivos C puedes ajustar el valor de prueba modificando la constante:
 
 ```c
-#define PIN_OBJETIVO 5831
-```
-
-Cambia `5831` por cualquier número entre `0` y `9999` y recompila.
+#define PIN_OBJETIVO 87654321
 
 ---
 
@@ -89,28 +101,28 @@ OMP_NUM_THREADS=8 ./openmp_pin
 ### MPI con 4 procesos
 
 ```
-Proceso 0 buscando desde 0000 hasta 2499
-Proceso 1 buscando desde 2500 hasta 4999
-Proceso 2 buscando desde 5000 hasta 7499
-Proceso 3 buscando desde 7500 hasta 9999
+Proceso 2 buscando desde 50000000 hasta 74999999 (25000000 combinaciones)
+Proceso 3 buscando desde 75000000 hasta 99999999 (25000000 combinaciones)
+Proceso 0 buscando desde 00000000 hasta 24999999 (25000000 combinaciones)
+Proceso 1 buscando desde 25000000 hasta 49999999 (25000000 combinaciones)
 
-PIN encontrado : 5831
-Encontrado por : Proceso 2
-Tiempo total   : 0.000123 segundos
+PIN encontrado : 87654321
+Encontrado por : Proceso 3
+Tiempo total   : 0.051859 segundos
 Procesos usados: 4
 ```
 
 ### OpenMP con 4 hilos
 
 ```
-Hilo 0 buscando desde 0000 hasta 2499
-Hilo 1 buscando desde 2500 hasta 4999
-Hilo 2 buscando desde 5000 hasta 7499
-Hilo 3 buscando desde 7500 hasta 9999
+Hilo 2 buscando desde 50000000 hasta 74999999
+Hilo 3 buscando desde 75000000 hasta 99999999
+Hilo 0 buscando desde 00000000 hasta 24999999
+Hilo 1 buscando desde 25000000 hasta 49999999
 
-PIN encontrado : 5831
-Encontrado por : Hilo 2
-Tiempo total   : 0.000098 segundos
+PIN encontrado : 87654321
+Encontrado por : Hilo 3
+Tiempo total   : 0.069593 segundos
 Hilos usados   : 4
 ```
 
@@ -123,8 +135,6 @@ Hilos usados   : 4
 1. ¿Cambia el tiempo de ejecución al aumentar el número de procesos/hilos? ¿Por qué?
 2. ¿Siempre encuentra el PIN el mismo proceso o hilo? ¿Qué lo determina?
 3. ¿Qué diferencia hay entre la memoria compartida (OpenMP) y la memoria distribuida (MPI)?
-4. ¿Qué sucedería si el rango fuera mucho más grande (por ejemplo, PINs de 8 dígitos)?
-
 ---
 
 ## Diferencias clave entre ambos modelos
