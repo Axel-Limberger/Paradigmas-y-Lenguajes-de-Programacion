@@ -52,6 +52,10 @@ El rango total se reparte de forma equitativa entre las unidades de procesamient
 En ambos archivos C puedes ajustar el valor de prueba modificando la constante:
 
 ```c
+#define PIN_OBJETIVO ........
+```
+
+Cambia el valor por cualquier número entre `0` y `99999999` y recompila.
 #define PIN_OBJETIVO 87654321
 
 ---
