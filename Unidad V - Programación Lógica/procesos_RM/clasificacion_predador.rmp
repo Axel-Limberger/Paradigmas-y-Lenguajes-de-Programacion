@@ -12,7 +12,7 @@
     <parameter key="process_duration_for_mail" value="30"/>
     <parameter key="encoding" value="SYSTEM"/>
     <process expanded="true">
-      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" height="68" name="Read CSV" width="90" x="179" y="187">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" height="68" name="Read CSV" width="90" x="380" y="187">
         <parameter key="csv_file" value="C:\Users\limbe\Desktop\Paradigmas y Lenguajes de programación\bd_aulaMoodle\animals\BD_animales.csv"/>
         <parameter key="column_separators" value=";"/>
         <parameter key="trim_lines" value="false"/>
@@ -64,8 +64,10 @@
         </list>
         <parameter key="read_not_matching_values_as_missings" value="false"/>
       </operator>
+      <connect from_op="Read CSV" from_port="output" to_port="result 1"/>
       <portSpacing port="source_input 1" spacing="0"/>
       <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
     </process>
   </operator>
 </process>
