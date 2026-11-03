@@ -12,6 +12,58 @@
     <parameter key="process_duration_for_mail" value="30"/>
     <parameter key="encoding" value="SYSTEM"/>
     <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" height="68" name="Read CSV" width="90" x="179" y="187">
+        <parameter key="csv_file" value="C:\Users\limbe\Desktop\Paradigmas y Lenguajes de programación\bd_aulaMoodle\animals\BD_animales.csv"/>
+        <parameter key="column_separators" value=";"/>
+        <parameter key="trim_lines" value="false"/>
+        <parameter key="multiline_text" value="false"/>
+        <parameter key="use_quotes" value="true"/>
+        <parameter key="quotes_character" value="&quot;"/>
+        <parameter key="escape_character" value="\"/>
+        <parameter key="skip_comments" value="true"/>
+        <parameter key="comment_characters" value="#"/>
+        <parameter key="starting_row" value="1"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="grouped_digits" value="false"/>
+        <parameter key="grouping_character" value=","/>
+        <parameter key="infinity_representation" value=""/>
+        <parameter key="date_format" value=""/>
+        <parameter key="use_header_row" value="true"/>
+        <parameter key="header_row" value="1"/>
+        <parameter key="first_row_as_names" value="true"/>
+        <list key="annotations"/>
+        <parameter key="time_zone" value="America/Buenos_Aires"/>
+        <parameter key="locale" value="English (United States)"/>
+        <parameter key="encoding" value="UTF-8"/>
+        <parameter key="read_all_values_as_polynominal" value="false"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="idanimal.true.integer.attribute"/>
+          <parameter key="1" value="nombre.true.polynominal.attribute"/>
+          <parameter key="2" value="caparazon.true.integer.attribute"/>
+          <parameter key="3" value="cola.true.integer.attribute"/>
+          <parameter key="4" value="comestible.true.integer.attribute"/>
+          <parameter key="5" value="cuernos.true.integer.attribute"/>
+          <parameter key="6" value="dientes.true.integer.attribute"/>
+          <parameter key="7" value="domestico.true.integer.attribute"/>
+          <parameter key="8" value="escamas.true.integer.attribute"/>
+          <parameter key="9" value="gran tamaño.true.integer.attribute"/>
+          <parameter key="10" value="huevos.true.integer.attribute"/>
+          <parameter key="11" value="patas.true.integer.attribute"/>
+          <parameter key="12" value="pelos.true.integer.attribute"/>
+          <parameter key="13" value="plumas.true.integer.attribute"/>
+          <parameter key="14" value="predador.true.integer.attribute"/>
+          <parameter key="15" value="pulmones.true.integer.attribute"/>
+          <parameter key="16" value="vertebrado.true.integer.attribute"/>
+          <parameter key="17" value="venenoso.true.integer.attribute"/>
+          <parameter key="18" value="idalimentacion.true.integer.attribute"/>
+          <parameter key="19" value="idcategoria.true.integer.attribute"/>
+          <parameter key="20" value="identorno.true.integer.attribute"/>
+          <parameter key="21" value="idhabitat.true.integer.attribute"/>
+          <parameter key="22" value="idterminacion.true.integer.attribute"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="false"/>
+      </operator>
       <portSpacing port="source_input 1" spacing="0"/>
       <portSpacing port="sink_result 1" spacing="0"/>
     </process>
