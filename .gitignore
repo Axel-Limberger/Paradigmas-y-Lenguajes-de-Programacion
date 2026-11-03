@@ -1,2 +1,9 @@
 MPI/mpi_pin
 OpenMP/openmp_pin
+*.ioo
+*.md
+*.csv
+*.xlsx
+*.zip
+.temp/
+logs/
